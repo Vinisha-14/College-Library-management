@@ -1,0 +1,328 @@
+#include<iostream>
+#include<vector>
+#include<string>
+using namespace std;
+class Book
+{
+	private:
+		int bookid;
+		string bookname;
+		string bookauthor;
+		int publishedyear;
+		bool issued;
+	public:
+		Book(int Id,string book,string author,int year)
+		{
+		bookid=Id;
+		bookname=book;
+		bookauthor=author;
+		publishedyear=year;	
+		issued=false;
+		}
+		string getName() const 
+		{
+        return bookname;
+   		}
+
+   		int getId() const 
+		{
+        return bookid;
+   		}
+		bool getissued() const
+		{
+			return issued;
+		}
+    	int getYear() const 
+		{
+        return publishedyear;
+    	}
+    	void issuedbook()
+    	{
+    		issued = true;
+		}
+		void display()
+		{
+		cout << "Book ID : " << bookid << "\n"<<"Book Name : " << bookname <<"\n"<<"Author of the Book : " << bookauthor <<"\n"<< "Published Year : "<< publishedyear <<"\n"<< "Book Status : " 
+		<< (issued==0?"NOT ISSUED":"ISSUED")<<endl;
+		}
+		
+};
+class Student 
+{
+	private:
+		string name;
+		string rollno;
+		vector<Book>issuebook;
+	public:
+		Student(string namee ,string no)
+		{
+			name=namee;
+			rollno=no;
+		}
+		string getname()
+		{
+			return name;
+		}
+		string getnum()
+		{
+			return rollno;
+		}
+		void addbookstu(Book &books)
+		{
+			issuebook.push_back(books);
+		}
+		void studentdisplay()
+		{
+			cout<< "Student Name : "<<name<<"\n";
+			cout<< "Student Roll no : "<<rollno<<"\n";
+			for( auto&book : issuebook)
+			{
+				book.display();
+			}	
+		}
+   
+};
+
+class Library
+{
+	private:
+		vector<Book>libBook;
+		vector<Student>libstudent;
+	public:
+	Library()
+	{
+	libBook.push_back(Book(1056, "The Silent Echo", "Rachel Adams", 2012));
+	libBook.push_back(Book(7829, "Beneath the Stars", "Lucas Harper", 2020));
+	libBook.push_back(Book(6745, "Shadows of the Wind", "Catherine Blake", 2011));
+	libBook.push_back(Book(5623, "Echoes of the Past", "Henry Turner", 2018));
+	libBook.push_back(Book(3982, "Journey Through Time", "Emily Foster", 2009));
+	libBook.push_back(Book(2479, "Whispers in the Dark", "James Hollis", 2015));	
+	libstudent.push_back(Student("Vinisha K", "EC313"));
+	libstudent.push_back(Student("Aryan S", "11EC314"));
+	libstudent.push_back(Student("Shruti N", "EC315"));
+	libstudent.push_back(Student("Nikhita R", "EC316"));
+	libstudent.push_back(Student("Ankita P", "EC317"));
+	libstudent.push_back(Student("Rahul T", "EC318"));
+	libstudent.push_back(Student("Meera L", "EC319"));
+	libstudent.push_back(Student("Saurabh V", "EC320"));		
+	}
+	void displayBooks()
+	{
+		for(int i=0;i<libBook.size();i++)
+		{
+			libBook[i].display();	
+		}
+	}
+	void addBooks()
+	{
+		int addid,addyear;
+		string addbook,addauthor;
+		cout<<"Enter Book Id : ";
+		cin>>addid;
+		cin.ignore();
+		cout<<"\nEnter Book Name : ";
+		getline(cin, addbook);
+		cout<<"\nEnter Author Name : ";
+		getline(cin, addauthor);
+		cout<<"\nEnter Published Year : ";
+		cin>>addyear;
+		cin.ignore();
+		libBook.push_back(Book(addid,addbook,addauthor,addyear));
+		cout<<"\nBook added Succesfully.";
+	}
+	void removeBooks()
+	{
+		int choice;
+        cout << "Choose the criteria to remove books:\n";
+        cout << "1. Remove by ID\n";
+        cout << "2. Remove by Name\n";
+        cout << "Enter your choice: ";
+        cin >> choice;
+
+        switch (choice) {
+            case 1:
+                removeBookById();
+                break;
+            case 2:
+                removeBookByName();
+                break;
+            default:
+                cout << "Invalid choice!" << endl;
+        }	
+	}
+	void removeBookById()
+	{
+		int removeId;
+        cout << "Enter Book ID to remove: ";
+        cin >> removeId;
+        bool found=0;
+       	auto it=libBook.begin();
+        while(it !=libBook.end())
+        {
+        	if(it->getId()==removeId)
+        	{
+        		it=libBook.erase(it);
+        		found=1;
+			}
+			else
+			{
+				++it;
+			}
+		}
+		if(found)
+		 cout << "Books with ID " << removeId << " have been removed.\n";
+		else
+		cout<<"Book not found.\n";
+	}
+	void removeBookByName()
+	 {
+    	string removeName;
+    	cin.ignore(); 
+   		 cout << "Enter Book Name to remove: ";
+   		 getline(cin, removeName);
+
+   		 bool found = 0; 
+   		 auto it = libBook.begin();
+   		 while (it != libBook.end()) {
+        if (it->getName() == removeName) {
+            it = libBook.erase(it); 
+            found = 1; 
+        } else {
+            ++it;
+        }
+    }
+
+    if (found) {
+        cout << "Books with name '" << removeName << "' have been removed.\n";
+    } else {
+        cout << "No books found with name '" << removeName << "'.\n";
+    }
+}
+	void searchBooks() 
+	{
+    cin.ignore();
+    string searchName;
+    cout << "Enter Book Name to search: ";
+    getline(cin, searchName);
+
+    bool found = false;
+
+   for (auto& book:libBook) {
+    if (book.getName() == searchName) 
+	{
+        book.display();
+        found = true;
+    }
+}
+    if (!found) {
+        cout << "No books found with the name '" << searchName << "'.\n";
+    }
+}
+	vector<Book>issuedbook;
+	
+	void issueBooks()
+	{
+	cin.ignore();
+    string searchname,studentnamee,studentno;
+    cout << "Enter Book Name to search: ";
+    getline(cin, searchname);
+    bool found=false;
+	Book *bookptr=nullptr;
+    for (auto& book:libBook) 
+	{
+    if(book.getName() == searchname&&!book.getissued()) 
+	{
+      	bookptr=&book;
+      	book.issuedbook();
+      	break;
+    }
+	}
+	if (bookptr == nullptr) 
+	{
+    cout << "Book not Found!" << endl;
+    return;
+	}
+	if(bookptr!=nullptr)
+	{
+	string rollnum;
+    cout << "Enter Roll.no to search: ";
+    getline(cin,rollnum);	
+	Student *stuptr = nullptr;
+	for (auto &student : libstudent) 
+	{
+    if (student.getnum() == rollnum) 
+	{
+        stuptr = &student;
+        break;
+    }
+	}
+	if (stuptr == nullptr)
+	{
+    cout << "Student Not Found!" << endl;
+	}
+	 else 
+	{
+    stuptr->addbookstu(*bookptr);
+    cout << "Book Issued Successfully";
+	}
+	}
+}
+	void studenthistory()
+	{
+		string studentno;
+		cout<<"Enter student roll no : ";
+		cin>>studentno;
+		for(auto & student : libstudent)
+		{
+			if(student.getnum()==studentno)
+			{
+				student.studentdisplay();
+				}	
+		}
+	}
+
+    
+};
+int main() {
+    Library lib;
+
+    while (1) {
+        cout << "\nLIBRARY MANAGEMENT SYSTEM\n";
+        cout << "1. BOOKS LIST\n";
+        cout << "2. ADD BOOKS\n";
+        cout << "3. REMOVE BOOKS\n";
+        cout << "4. SEARCH BOOKS\n";
+        cout << "5. ISSUE BOOKS\n";
+        cout << "6. STUDENT BOOK HISTORY\n";
+        cout << "7. EXIT\n";
+
+        int choose;
+        cout << "Enter your choice: ";
+        cin >> choose;
+
+        switch (choose) {
+            case 1:
+                lib.displayBooks();
+                break;
+            case 2:
+                lib.addBooks();
+                break;
+            case 3:
+                lib.removeBooks();
+                break;
+            case 4:
+                lib.searchBooks();
+                break;
+			case 5:
+                lib.issueBooks();
+                break;
+            case 6:
+                lib.studenthistory();
+                break;
+            case 7:
+            	exit(0);
+            default:
+                cout << "Invalid choice, enter a number between 1 and 9." << endl;
+        }
+    }
+}
